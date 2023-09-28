@@ -114,7 +114,6 @@ namespace in_class_project
                     string line;
                     int lineCounter = 0;
 
-
                     try
                     {
                         while ((line = reader.ReadLine()) != null)
@@ -125,15 +124,15 @@ namespace in_class_project
                                 lineCounter++;
                                 continue;
                             }
-                            string[] fields = line.Split(',');
+                            string[] fields = line.Split(','); 
                             string ticker = fields[0].Trim('"');
                             string period = fields[1].Trim('"');
-                            string date = fields[2].Trim('"');
-                            string open = fields[3].Trim('"');
-                            string close = fields[4].Trim('"');
-                            string high = fields[5].Trim('"');
-                            string low = fields[6].Trim('"');
-                            string volume = fields[7].Trim('"');
+                            string date = $"{fields[2]},{fields[3]}";
+                            string open = fields[4];
+                            string close = fields[5];
+                            string high = fields[6];
+                            string low = fields[7];
+                            string volume = fields[8];
                             // Process the line (e.g., print it to the console
 
                             StockData stockData = new StockData(ticker, period, date, open, close, high, low, volume);
