@@ -34,12 +34,13 @@ namespace in_class_project
             this.label_title = new System.Windows.Forms.Label();
             this.openFileDialog_LoadTicker = new System.Windows.Forms.OpenFileDialog();
             this.label_Filename = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonSearch
             // 
-            this.buttonSearch.Location = new System.Drawing.Point(315, 203);
+            this.buttonSearch.Location = new System.Drawing.Point(614, 100);
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(75, 23);
             this.buttonSearch.TabIndex = 0;
@@ -54,9 +55,9 @@ namespace in_class_project
             this.label_title.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.label_title.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold);
             this.label_title.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label_title.Location = new System.Drawing.Point(191, 52);
+            this.label_title.Location = new System.Drawing.Point(372, 29);
             this.label_title.Margin = new System.Windows.Forms.Padding(3);
-            this.label_title.MaximumSize = new System.Drawing.Size(200, 200);
+            this.label_title.MaximumSize = new System.Drawing.Size(200, 400);
             this.label_title.Name = "label_title";
             this.label_title.Padding = new System.Windows.Forms.Padding(10);
             this.label_title.Size = new System.Drawing.Size(199, 126);
@@ -67,31 +68,34 @@ namespace in_class_project
             // label_Filename
             // 
             this.label_Filename.AutoSize = true;
-            this.label_Filename.Location = new System.Drawing.Point(192, 208);
+            this.label_Filename.Location = new System.Drawing.Point(601, 68);
             this.label_Filename.MaximumSize = new System.Drawing.Size(150, 100);
             this.label_Filename.Name = "label_Filename";
             this.label_Filename.Size = new System.Drawing.Size(98, 13);
             this.label_Filename.TabIndex = 2;
             this.label_Filename.Text = "Select a Ticker File";
             // 
-            // label2
+            // dataGridView1
             // 
-            this.label2.Location = new System.Drawing.Point(0, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(100, 23);
-            this.label2.TabIndex = 0;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(12, 177);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(1011, 340);
+            this.dataGridView1.TabIndex = 3;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // Form_Ticker_Selector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(574, 283);
-            this.Controls.Add(this.label2);
+            this.ClientSize = new System.Drawing.Size(1035, 529);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label_Filename);
             this.Controls.Add(this.label_title);
             this.Controls.Add(this.buttonSearch);
             this.Name = "Form_Ticker_Selector";
             this.Text = "Ticker Selection";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -103,7 +107,7 @@ namespace in_class_project
         private System.Windows.Forms.Label label_title;
         private System.Windows.Forms.OpenFileDialog openFileDialog_LoadTicker;
         private System.Windows.Forms.Label label_Filename;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }
 

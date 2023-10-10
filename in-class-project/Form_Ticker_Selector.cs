@@ -12,22 +12,21 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace in_class_project
 {
-
+    
 
     public partial class Form_Ticker_Selector : Form
     {
-        public class StockData  //candle stick classes
+        public class StockData
         {
             private string ticker;
             private string period;
-            private string date;
-            private string open;
-            private string close;
-            private string high;
-            private string low;
-            private string volume;
+            private DateTime date;
+            private decimal open;
+            private decimal close;
+            private decimal high;
+            private decimal low;
+            private int volume;
 
-            // Properties to access the fields
             public string Ticker
             {
                 get { return ticker; }
@@ -40,44 +39,43 @@ namespace in_class_project
                 set { period = value; }
             }
 
-            public string Date
+            public DateTime Date
             {
                 get { return date; }
                 set { date = value; }
             }
 
-            public string Open
+            public decimal Open
             {
                 get { return open; }
                 set { open = value; }
             }
 
-            public string Close
+            public decimal Close
             {
                 get { return close; }
                 set { close = value; }
             }
 
-            public string High
+            public decimal High
             {
                 get { return high; }
                 set { high = value; }
             }
 
-            public string Low
+            public decimal Low
             {
                 get { return low; }
                 set { low = value; }
             }
 
-            public string Volume
+            public int Volume
             {
                 get { return volume; }
                 set { volume = value; }
             }
 
-            // Constructor
-            public StockData(string ticker, string period, string date, string open, string close, string high, string low, string volume)
+            public StockData(string ticker, string period, DateTime date, decimal open, decimal close, decimal high, decimal low, int volume)
             {
                 this.ticker = ticker;
                 this.period = period;
@@ -94,6 +92,9 @@ namespace in_class_project
             InitializeComponent();
         }
 
+        // Rest of your code...
+
+
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -107,13 +108,13 @@ namespace in_class_project
                 string selectedFilePath = openFileDialog.FileName;
                 string selectedFileName = Path.GetFileName(selectedFilePath); // Extract only the filename
                 label_Filename.Text = "File:\t" + selectedFileName; // Display the filename in a TextBox
-                List<StockData> stockDataList = new List<StockData>();  //this is an array of stockData
-                // Open the file for reading
+                BindingList<StockData> stockDataList;  //this is an array of candlesticks
                 using (StreamReader reader = new StreamReader(selectedFilePath))
                 {
+                    stockDataList = new BindingList<StockData>();
+                    dataGridView1.DataSource = stockDataList;
                     string line;
                     int lineCounter = 0;
-
                     try
                     {
                         while ((line = reader.ReadLine()) != null)
@@ -124,20 +125,22 @@ namespace in_class_project
                                 lineCounter++;
                                 continue;
                             }
-                            string[] fields = line.Split(','); 
+                            string[] fields = line.Split(',');
+
                             string ticker = fields[0].Trim('"');
                             string period = fields[1].Trim('"');
-                            string date = $"{fields[2]},{fields[3]}";
-                            string open = fields[4];
-                            string close = fields[5];
-                            string high = fields[6];
-                            string low = fields[7];
-                            string volume = fields[8];
+                            string s = $"{fields[2]}{fields[3]}".Trim('"');
+                            DateTime date = DateTime.Parse("2023-10-03 15:45:30");
+                            decimal open = decimal.Parse(fields[4]);
+                            decimal close = decimal.Parse(fields[5]);
+                            decimal high = decimal.Parse(fields[6]);
+                            decimal low = decimal.Parse(fields[7]);
+                            int volume = int.Parse(fields[8]);
                             // Process the line (e.g., print it to the console
 
                             StockData stockData = new StockData(ticker, period, date, open, close, high, low, volume);
-                                stockDataList.Add(stockData);
-                     
+                            stockDataList.Add(stockData);
+
 
                             lineCounter++;
                         }
@@ -156,5 +159,9 @@ namespace in_class_project
             }
         }
 
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }
