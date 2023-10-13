@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq; // language integrated query - extract data using C#.
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace in_class_project
@@ -18,26 +20,12 @@ namespace in_class_project
     {
         public class StockData
         {
-            private string ticker;
-            private string period;
-            private DateTime date;
-            private decimal open;
-            private decimal close;
-            private decimal high;
-            private decimal low;
-            private int volume;
-
-            public string Ticker
-            {
-                get { return ticker; }
-                set { ticker = value; }
-            }
-
-            public string Period
-            {
-                get { return period; }
-                set { period = value; }
-            }
+            public DateTime date;
+            public decimal open;
+            public decimal close;
+            public decimal high;
+            public decimal low;
+            public decimal volume;
 
             public DateTime Date
             {
@@ -69,16 +57,14 @@ namespace in_class_project
                 set { low = value; }
             }
 
-            public int Volume
+            public decimal Volume
             {
                 get { return volume; }
                 set { volume = value; }
             }
 
-            public StockData(string ticker, string period, DateTime date, decimal open, decimal close, decimal high, decimal low, int volume)
+            public StockData(DateTime date, decimal open, decimal close, decimal high, decimal low, int volume)
             {
-                this.ticker = ticker;
-                this.period = period;
                 this.date = date;
                 this.open = open;
                 this.close = close;
@@ -86,35 +72,64 @@ namespace in_class_project
                 this.low = low;
                 this.volume = volume;
             }
+
         }
+
+        public class DateConverter
+        {
+            public static string ConvertToCustomFormat(string inputDate)
+            {
+                DateTime parsedDate;
+
+                if (DateTime.TryParseExact(inputDate, "MMMM d yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate))
+                {
+                    return parsedDate.ToString("yyyy-MM-dd HH:mm:ss");
+                }
+                else
+                {
+                    return "Invalid Date Format";
+                }
+            }
+        }
+
         public Form_Ticker_Selector()
         {
             InitializeComponent();
+
+                // Subscribe to the ValueChanged events of date pickers
         }
 
-        // Rest of your code...
+        BindingList<StockData> stockDataList;  //this is an array of candlesticks
+        BindingSource bindingSource = new BindingSource();
 
-
-        private void button1_Click(object sender, EventArgs e)
+        public void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
+            // to refresh the chart
             openFileDialog.Title = "Open Ticker CSV file";
-            openFileDialog.Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*";
+            openFileDialog.Filter = "All Files|*.csv|Daily Stock|*-Day.csv|Weekly Stock|*-Week.csv|Monthly Stock|*-Month.csv";
+
+            chart1.DataSource = bindingSource;
+            chart1.DataBind();
 
             // file was selected
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
+                DateTime startDate = dateTimePicker_StartDate.Value;
+                DateTime endDate = dateTimePicker_EndDate.Value;
                 string selectedFilePath = openFileDialog.FileName;
                 string selectedFileName = Path.GetFileName(selectedFilePath); // Extract only the filename
                 label_Filename.Text = "File:\t" + selectedFileName; // Display the filename in a TextBox
-                BindingList<StockData> stockDataList;  //this is an array of candlesticks
+                List<StockData> rawData;
                 using (StreamReader reader = new StreamReader(selectedFilePath))
                 {
+                    rawData = new List<StockData>();
                     stockDataList = new BindingList<StockData>();
-                    dataGridView1.DataSource = stockDataList;
                     string line;
                     int lineCounter = 0;
+                    string stockTicker = "";
+                    string stockPeriod = "";
                     try
                     {
                         while ((line = reader.ReadLine()) != null)
@@ -127,10 +142,10 @@ namespace in_class_project
                             }
                             string[] fields = line.Split(',');
 
-                            string ticker = fields[0].Trim('"');
-                            string period = fields[1].Trim('"');
+                            stockTicker = fields[0].Trim('"');
+                            stockPeriod = fields[1].Trim('"');
                             string s = $"{fields[2]}{fields[3]}".Trim('"');
-                            DateTime date = DateTime.Parse("2023-10-03 15:45:30");
+                            DateTime date = DateTime.Parse(s);
                             decimal open = decimal.Parse(fields[4]);
                             decimal close = decimal.Parse(fields[5]);
                             decimal high = decimal.Parse(fields[6]);
@@ -138,16 +153,35 @@ namespace in_class_project
                             int volume = int.Parse(fields[8]);
                             // Process the line (e.g., print it to the console
 
-                            StockData stockData = new StockData(ticker, period, date, open, close, high, low, volume);
-                            stockDataList.Add(stockData);
-
+                            StockData stockData = new StockData(date, open, close, high, low, volume);
+                            rawData.Add(stockData);
 
                             lineCounter++;
                         }
+
+                        rawData.Reverse();
+                        //filter the data from rawData using the date ranges.
+                        foreach (var stockData in rawData)
+                        {
+                            if (stockData.date >= startDate && stockData.date <= endDate)
+                            {
+                                stockDataList.Add(stockData);
+                            }
+
+                            if (stockData.date > endDate)
+                            {
+                                break;
+                            }
+                        }
+
                         foreach (var stockData in stockDataList)
                         {
-                            Console.WriteLine($"Ticker: {stockData.Ticker}, Period: {stockData.Period}, Date: {stockData.Date}, Open: {stockData.Open}, Close: {stockData.Close}, High: {stockData.High}, Low: {stockData.Low}, Volume: {stockData.Volume}");
+                            Console.WriteLine($"Ticker: {stockTicker}, Period: {stockPeriod}, Date: {stockData.Date}, Open: {stockData.Open}, Close: {stockData.Close}, High: {stockData.High}, Low: {stockData.Low}, Volume: {stockData.Volume}");
                         }
+
+                        // stockData should be only the data in the date range
+                        dataGridView1.DataSource = stockDataList;
+
                     }
                     catch (Exception ex)
                     {
@@ -155,13 +189,26 @@ namespace in_class_project
                         Console.WriteLine($"An error occurred: {ex.Message}");
                     }
 
+
                 }
             }
         }
+
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
+
+        private void chart1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void openFileDialog_LoadTicker_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
     }
 }
