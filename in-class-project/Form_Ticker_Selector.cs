@@ -22,9 +22,9 @@ namespace in_class_project
         {
             public DateTime date;
             public decimal open;
-            public decimal close;
             public decimal high;
             public decimal low;
+            public decimal close;
             public decimal volume;
 
             public DateTime Date
@@ -63,13 +63,13 @@ namespace in_class_project
                 set { volume = value; }
             }
 
-            public StockData(DateTime date, decimal open, decimal close, decimal high, decimal low, int volume)
+            public StockData(DateTime date, decimal open, decimal high, decimal low,  decimal close, int volume)
             {
                 this.date = date;
                 this.open = open;
-                this.close = close;
                 this.high = high;
                 this.low = low;
+                this.close = close;
                 this.volume = volume;
             }
 
@@ -100,7 +100,6 @@ namespace in_class_project
         }
 
         BindingList<StockData> stockDataList;  //this is an array of candlesticks
-        BindingSource bindingSource = new BindingSource();
 
         public void button1_Click(object sender, EventArgs e)
         {
@@ -110,18 +109,17 @@ namespace in_class_project
             openFileDialog.Title = "Open Ticker CSV file";
             openFileDialog.Filter = "All Files|*.csv|Daily Stock|*-Day.csv|Weekly Stock|*-Week.csv|Monthly Stock|*-Month.csv";
 
-            chart1.DataSource = bindingSource;
-            chart1.DataBind();
-
             // file was selected
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 DateTime startDate = dateTimePicker_StartDate.Value;
                 DateTime endDate = dateTimePicker_EndDate.Value;
+
                 string selectedFilePath = openFileDialog.FileName;
                 string selectedFileName = Path.GetFileName(selectedFilePath); // Extract only the filename
                 label_Filename.Text = "File:\t" + selectedFileName; // Display the filename in a TextBox
-                List<StockData> rawData;
+
+                List<StockData> rawData; //todos los datos
                 using (StreamReader reader = new StreamReader(selectedFilePath))
                 {
                     rawData = new List<StockData>();
@@ -137,6 +135,7 @@ namespace in_class_project
                             // Skip the first line (lineCounter == 0)
                             if (lineCounter == 0)
                             {
+           
                                 lineCounter++;
                                 continue;
                             }
@@ -147,13 +146,13 @@ namespace in_class_project
                             string s = $"{fields[2]}{fields[3]}".Trim('"');
                             DateTime date = DateTime.Parse(s);
                             decimal open = decimal.Parse(fields[4]);
-                            decimal close = decimal.Parse(fields[5]);
-                            decimal high = decimal.Parse(fields[6]);
-                            decimal low = decimal.Parse(fields[7]);
+                            decimal high = decimal.Parse(fields[5]);
+                            decimal low = decimal.Parse(fields[6]);
+                            decimal close = decimal.Parse(fields[7]);
                             int volume = int.Parse(fields[8]);
                             // Process the line (e.g., print it to the console
 
-                            StockData stockData = new StockData(date, open, close, high, low, volume);
+                            StockData stockData = new StockData(date, open, high, low, close, volume);
                             rawData.Add(stockData);
 
                             lineCounter++;
@@ -180,7 +179,54 @@ namespace in_class_project
                         }
 
                         // stockData should be only the data in the date range
+
                         dataGridView1.DataSource = stockDataList;
+
+                        chart1.Series.Clear();
+
+                        // Create series for Price and Volume chart areas
+                        Series priceSeries = new Series("Price");
+                        priceSeries.ChartType = SeriesChartType.Candlestick;
+                        priceSeries.XValueType = ChartValueType.Date;
+
+                        Series volumeSeries = new Series("Volume");
+                        volumeSeries.ChartType = SeriesChartType.Column;
+                        volumeSeries.XValueType = ChartValueType.Date;
+
+                        // Add data points to the Candlestick and Column series
+                        foreach (var stockData in stockDataList)
+                        {
+                            // Add data points to Candlestick series
+                            DataPoint priceDataPoint = new DataPoint();
+                            priceDataPoint.XValue = stockData.Date.ToOADate();
+                            priceDataPoint.YValues = new double[] { (double)stockData.High, (double)stockData.Low, (double)stockData.Open, (double)stockData.Close };
+                            //priceDataPoint.SetValueXY(stockData.Date, (double)stockData.High, (double)stockData.Low, (double)stockData.Close, (double)stockData.Open);
+                            if(stockData.Close > stockData.Open)
+                            {
+                                priceDataPoint.Color = Color.Red;
+                            }
+                            else
+                            {
+                                priceDataPoint.Color = Color.LimeGreen;
+                            }
+                            
+                            priceSeries.Points.Add(priceDataPoint);
+
+                            // Add data points to Volume series
+                            DataPoint volumeDataPoint = new DataPoint();
+                            volumeDataPoint.SetValueY((double)stockData.Volume);
+                            volumeSeries.Points.Add(volumeDataPoint);
+                        }
+
+                        // Add the Candlestick and Volume series to the chart
+                        chart1.Series.Add(priceSeries);
+                        chart1.Series.Add(volumeSeries);
+
+                        // Set the chart area names for the series
+                        priceSeries.ChartArea = "ChartAreaPrice";
+                        volumeSeries.ChartArea = "ChartAreaVolume";
+
+
 
                     }
                     catch (Exception ex)
@@ -210,5 +256,14 @@ namespace in_class_project
 
         }
 
+        private void chart1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void bindingSource1_CurrentChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

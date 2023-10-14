@@ -46,11 +46,11 @@ namespace in_class_project
             this.dateTimePicker_StartDate = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker_EndDate = new System.Windows.Forms.DateTimePicker();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.label_table_title = new System.Windows.Forms.Label();
             this.label_chart_title = new System.Windows.Forms.Label();
             this.label_end_date = new System.Windows.Forms.Label();
             this.label_start_date = new System.Windows.Forms.Label();
-            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
@@ -130,6 +130,7 @@ namespace in_class_project
             // chart1
             // 
             this.chart1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            chartArea1.AxisY.IsStartedFromZero = false;
             chartArea1.Name = "ChartAreaPrice";
             chartArea2.AlignWithChartArea = "ChartAreaPrice";
             chartArea2.Name = "ChartAreaVolume";
@@ -142,13 +143,13 @@ namespace in_class_project
             this.chart1.Name = "chart1";
             series1.ChartArea = "ChartAreaPrice";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Candlestick;
-            series1.CustomProperties = "PriceDownColor=Red, PriceUpColor=Lime";
             series1.Legend = "Legend1";
             series1.Name = "SeriesPrice";
             series1.XValueMember = "0";
             series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
             series1.YValueMembers = "0";
             series1.YValuesPerPoint = 4;
+            series1.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
             series2.ChartArea = "ChartAreaVolume";
             series2.LabelForeColor = System.Drawing.Color.Blue;
             series2.Legend = "Legend1";
@@ -162,6 +163,11 @@ namespace in_class_project
             title2.Name = "Volume";
             this.chart1.Titles.Add(title1);
             this.chart1.Titles.Add(title2);
+            this.chart1.Click += new System.EventHandler(this.chart1_Click_1);
+            // 
+            // bindingSource1
+            // 
+            this.bindingSource1.CurrentChanged += new System.EventHandler(this.bindingSource1_CurrentChanged);
             // 
             // label_table_title
             // 
