@@ -51,6 +51,7 @@ namespace in_class_project
             this.label_chart_title = new System.Windows.Forms.Label();
             this.label_end_date = new System.Windows.Forms.Label();
             this.label_start_date = new System.Windows.Forms.Label();
+            this.button_refresh = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
@@ -209,11 +210,24 @@ namespace in_class_project
             this.label_start_date.TabIndex = 9;
             this.label_start_date.Text = "Start date:";
             // 
+            // button_refresh
+            // 
+            this.button_refresh.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.button_refresh.Location = new System.Drawing.Point(624, 55);
+            this.button_refresh.Name = "button_refresh";
+            this.button_refresh.Size = new System.Drawing.Size(29, 27);
+            this.button_refresh.TabIndex = 10;
+            this.button_refresh.Text = "↻";
+            this.button_refresh.UseCompatibleTextRendering = true;
+            this.button_refresh.UseVisualStyleBackColor = true;
+            this.button_refresh.Click += new System.EventHandler(this.button_refresh_Click);
+            // 
             // Form_Ticker_Selector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(809, 782);
+            this.Controls.Add(this.button_refresh);
             this.Controls.Add(this.label_start_date);
             this.Controls.Add(this.label_end_date);
             this.Controls.Add(this.label_chart_title);
@@ -250,6 +264,7 @@ namespace in_class_project
         private System.Windows.Forms.Label label_end_date;
         private System.Windows.Forms.Label label_start_date;
         private System.Windows.Forms.BindingSource bindingSource1;
+        private System.Windows.Forms.Button button_refresh;
     }
 }
 

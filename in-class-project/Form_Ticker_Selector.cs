@@ -15,7 +15,6 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 namespace in_class_project
 {
     
-
     public partial class Form_Ticker_Selector : Form
     {
         public class StockData
@@ -99,7 +98,9 @@ namespace in_class_project
                 // Subscribe to the ValueChanged events of date pickers
         }
 
+        List<StockData> rawData; //all stock data 
         BindingList<StockData> stockDataList;  //this is an array of candlesticks
+
 
         public void button1_Click(object sender, EventArgs e)
         {
@@ -119,7 +120,6 @@ namespace in_class_project
                 string selectedFileName = Path.GetFileName(selectedFilePath); // Extract only the filename
                 label_Filename.Text = "File:\t" + selectedFileName; // Display the filename in a TextBox
 
-                List<StockData> rawData; //todos los datos
                 using (StreamReader reader = new StreamReader(selectedFilePath))
                 {
                     rawData = new List<StockData>();
@@ -181,51 +181,8 @@ namespace in_class_project
                         // stockData should be only the data in the date range
 
                         dataGridView1.DataSource = stockDataList;
-
-                        chart1.Series.Clear();
-
-                        // Create series for Price and Volume chart areas
-                        Series priceSeries = new Series("Price");
-                        priceSeries.ChartType = SeriesChartType.Candlestick;
-                        priceSeries.XValueType = ChartValueType.Date;
-
-                        Series volumeSeries = new Series("Volume");
-                        volumeSeries.ChartType = SeriesChartType.Column;
-                        volumeSeries.XValueType = ChartValueType.Date;
-
-                        // Add data points to the Candlestick and Column series
-                        foreach (var stockData in stockDataList)
-                        {
-                            // Add data points to Candlestick series
-                            DataPoint priceDataPoint = new DataPoint();
-                            priceDataPoint.XValue = stockData.Date.ToOADate();
-                            priceDataPoint.YValues = new double[] { (double)stockData.High, (double)stockData.Low, (double)stockData.Open, (double)stockData.Close };
-                            //priceDataPoint.SetValueXY(stockData.Date, (double)stockData.High, (double)stockData.Low, (double)stockData.Close, (double)stockData.Open);
-                            if(stockData.Close > stockData.Open)
-                            {
-                                priceDataPoint.Color = Color.Red;
-                            }
-                            else
-                            {
-                                priceDataPoint.Color = Color.LimeGreen;
-                            }
-                            
-                            priceSeries.Points.Add(priceDataPoint);
-
-                            // Add data points to Volume series
-                            DataPoint volumeDataPoint = new DataPoint();
-                            volumeDataPoint.SetValueY((double)stockData.Volume);
-                            volumeSeries.Points.Add(volumeDataPoint);
-                        }
-
-                        // Add the Candlestick and Volume series to the chart
-                        chart1.Series.Add(priceSeries);
-                        chart1.Series.Add(volumeSeries);
-
-                        // Set the chart area names for the series
-                        priceSeries.ChartArea = "ChartAreaPrice";
-                        volumeSeries.ChartArea = "ChartAreaVolume";
-
+                        updateStockDataArray();
+                        
 
 
                     }
@@ -258,12 +215,85 @@ namespace in_class_project
 
         private void chart1_Click_1(object sender, EventArgs e)
         {
-
+            
         }
 
         private void bindingSource1_CurrentChanged(object sender, EventArgs e)
         {
+            
+        }
 
+        public void updateStockDataArray()
+        {
+
+            chart1.Series.Clear();
+
+            DateTime startDate = dateTimePicker_StartDate.Value;
+            DateTime endDate = dateTimePicker_EndDate.Value;
+
+            foreach (var stockData in rawData)
+            {
+                if (stockData.date >= startDate && stockData.date <= endDate)
+                {
+                    stockDataList.Add(stockData);
+                }
+
+                if (stockData.date > endDate)
+                {
+                    break;
+                }
+            }
+
+            // Create series for Price and Volume chart areas
+            Series priceSeries = new Series("Price");
+            priceSeries.ChartType = SeriesChartType.Candlestick;
+            priceSeries.XValueType = ChartValueType.Date;
+
+            Series volumeSeries = new Series("Volume");
+            volumeSeries.ChartType = SeriesChartType.Column;
+            volumeSeries.XValueType = ChartValueType.Date;
+
+            // Add data points to the Candlestick and Column series
+            foreach (var stockData in stockDataList)
+            {
+                // Add data points to Candlestick series
+                DataPoint priceDataPoint = new DataPoint();
+                priceDataPoint.XValue = stockData.Date.ToOADate();
+                priceDataPoint.YValues = new double[] { (double)stockData.High, (double)stockData.Low, (double)stockData.Open, (double)stockData.Close };
+                //priceDataPoint.SetValueXY(stockData.Date, (double)stockData.High, (double)stockData.Low, (double)stockData.Close, (double)stockData.Open);
+                if (stockData.Close > stockData.Open)
+                {
+                    priceDataPoint.Color = Color.Red;
+                }
+                else
+                {
+                    priceDataPoint.Color = Color.LimeGreen;
+                }
+
+                priceSeries.Points.Add(priceDataPoint);
+
+                // Add data points to Volume series
+                DataPoint volumeDataPoint = new DataPoint();
+                volumeDataPoint.XValue = stockData.Date.ToOADate();
+                volumeDataPoint.SetValueY((double)stockData.Volume);
+                volumeSeries.Points.Add(volumeDataPoint);
+            }
+
+            // Add the Candlestick and Volume series to the chart
+            chart1.Series.Add(priceSeries);
+            chart1.Series.Add(volumeSeries);
+
+            // Set the chart area names for the series
+            priceSeries.ChartArea = "ChartAreaPrice";
+            volumeSeries.ChartArea = "ChartAreaVolume";
+
+            chart1.Invalidate();
+
+        }     
+
+        public void button_refresh_Click(object sender, EventArgs e)
+        {
+                updateStockDataArray();
         }
     }
 }
