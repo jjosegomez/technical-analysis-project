@@ -42,19 +42,17 @@ namespace in_class_project
             this.label_title = new System.Windows.Forms.Label();
             this.openFileDialog_LoadTicker = new System.Windows.Forms.OpenFileDialog();
             this.label_Filename = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridView_stock = new System.Windows.Forms.DataGridView();
             this.dateTimePicker_StartDate = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker_EndDate = new System.Windows.Forms.DateTimePicker();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.label_table_title = new System.Windows.Forms.Label();
             this.label_chart_title = new System.Windows.Forms.Label();
             this.label_end_date = new System.Windows.Forms.Label();
             this.label_start_date = new System.Windows.Forms.Label();
             this.button_refresh = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_stock)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonSearch
@@ -102,15 +100,15 @@ namespace in_class_project
             this.label_Filename.TabIndex = 2;
             this.label_Filename.Text = "Select a Ticker File:";
             // 
-            // dataGridView1
+            // dataGridView_stock
             // 
-            this.dataGridView1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(82, 184);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(654, 123);
-            this.dataGridView1.TabIndex = 3;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.dataGridView_stock.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dataGridView_stock.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_stock.Location = new System.Drawing.Point(82, 184);
+            this.dataGridView_stock.Name = "dataGridView_stock";
+            this.dataGridView_stock.Size = new System.Drawing.Size(654, 123);
+            this.dataGridView_stock.TabIndex = 3;
+            this.dataGridView_stock.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // dateTimePicker_StartDate
             // 
@@ -137,7 +135,6 @@ namespace in_class_project
             chartArea2.Name = "ChartAreaVolume";
             this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.ChartAreas.Add(chartArea2);
-            this.chart1.DataSource = this.bindingSource1;
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(48, 340);
@@ -165,10 +162,6 @@ namespace in_class_project
             this.chart1.Titles.Add(title1);
             this.chart1.Titles.Add(title2);
             this.chart1.Click += new System.EventHandler(this.chart1_Click_1);
-            // 
-            // bindingSource1
-            // 
-            this.bindingSource1.CurrentChanged += new System.EventHandler(this.bindingSource1_CurrentChanged);
             // 
             // label_table_title
             // 
@@ -235,15 +228,14 @@ namespace in_class_project
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.dateTimePicker_EndDate);
             this.Controls.Add(this.dateTimePicker_StartDate);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.dataGridView_stock);
             this.Controls.Add(this.label_Filename);
             this.Controls.Add(this.label_title);
             this.Controls.Add(this.buttonSearch);
             this.Name = "Form_Ticker_Selector";
             this.Text = "t";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_stock)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -255,7 +247,7 @@ namespace in_class_project
         private System.Windows.Forms.Label label_title;
         private System.Windows.Forms.OpenFileDialog openFileDialog_LoadTicker;
         private System.Windows.Forms.Label label_Filename;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dataGridView_stock;
         private System.Windows.Forms.DateTimePicker dateTimePicker_StartDate;
         private System.Windows.Forms.DateTimePicker dateTimePicker_EndDate;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
@@ -263,7 +255,6 @@ namespace in_class_project
         private System.Windows.Forms.Label label_chart_title;
         private System.Windows.Forms.Label label_end_date;
         private System.Windows.Forms.Label label_start_date;
-        private System.Windows.Forms.BindingSource bindingSource1;
         private System.Windows.Forms.Button button_refresh;
     }
 }

@@ -101,6 +101,17 @@ namespace in_class_project
         List<StockData> rawData; //all stock data 
         BindingList<StockData> stockDataList;  //this is an array of candlesticks
 
+        private List<StockData> loadStockData(string filename)
+        {
+            List<StockData> allStockData = new List<StockData>(1024);
+            using(StreamReader reader = new StreamReader(filename))
+            {
+                dataGridView_stock.DataSource = candlesticks;
+
+                string header = reader.ReadLine();
+            }
+            return allStockData;
+        }
 
         public void button1_Click(object sender, EventArgs e)
         {
@@ -180,7 +191,7 @@ namespace in_class_project
 
                         // stockData should be only the data in the date range
 
-                        dataGridView1.DataSource = stockDataList;
+                        dataGridView_stock.DataSource = stockDataList;
                         updateStockDataArray();
                         
 
@@ -267,7 +278,7 @@ namespace in_class_project
                 }
                 else
                 {
-                    priceDataPoint.Color = Color.LimeGreen;
+                    priceDataPoint.Color = Color.Green;
                 }
 
                 priceSeries.Points.Add(priceDataPoint);
