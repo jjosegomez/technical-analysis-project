@@ -5,19 +5,19 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq; // language integrated query - extract data using C#.
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static in_class_project.Form_Ticker_Chart;
+
 
 namespace in_class_project
 {
-    
     public partial class Form_Ticker_Selector : Form
     {
-        public class StockData
+        public class CandleStick
         {
             public DateTime date;
             public decimal open;
@@ -62,7 +62,7 @@ namespace in_class_project
                 set { volume = value; }
             }
 
-            public StockData(DateTime date, decimal open, decimal high, decimal low,  decimal close, int volume)
+            public CandleStick(DateTime date, decimal open, decimal high, decimal low, decimal close, int volume)
             {
                 this.date = date;
                 this.open = open;
@@ -90,163 +90,23 @@ namespace in_class_project
                 }
             }
         }
-
         public Form_Ticker_Selector()
         {
             InitializeComponent();
-
-                // Subscribe to the ValueChanged events of date pickers
         }
 
-        List<StockData> rawData; //all stock data 
-        BindingList<StockData> stockDataList;  //this is an array of candlesticks
-
-        private List<StockData> loadStockData(string filename)
+        //filters the binding list that will be link with the chart
+        public BindingList<CandleStick> FilterDataUsingStartDateAndEndDate(DateTime startDate, DateTime endDate, List<CandleStick> stockDataList)
         {
-            List<StockData> allStockData = new List<StockData>(1024);
-            using(StreamReader reader = new StreamReader(filename))
-            {
-                dataGridView_stock.DataSource = candlesticks;
+            //filter the data from rawData using the date ranges.
 
-                string header = reader.ReadLine();
-            }
-            return allStockData;
-        }
+            BindingList<CandleStick> filteredStockData = new BindingList<CandleStick>();
 
-        public void button1_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-
-            // to refresh the chart
-            openFileDialog.Title = "Open Ticker CSV file";
-            openFileDialog.Filter = "All Files|*.csv|Daily Stock|*-Day.csv|Weekly Stock|*-Week.csv|Monthly Stock|*-Month.csv";
-
-            // file was selected
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                DateTime startDate = dateTimePicker_StartDate.Value;
-                DateTime endDate = dateTimePicker_EndDate.Value;
-
-                string selectedFilePath = openFileDialog.FileName;
-                string selectedFileName = Path.GetFileName(selectedFilePath); // Extract only the filename
-                label_Filename.Text = "File:\t" + selectedFileName; // Display the filename in a TextBox
-
-                using (StreamReader reader = new StreamReader(selectedFilePath))
-                {
-                    rawData = new List<StockData>();
-                    stockDataList = new BindingList<StockData>();
-                    string line;
-                    int lineCounter = 0;
-                    string stockTicker = "";
-                    string stockPeriod = "";
-                    try
-                    {
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            // Skip the first line (lineCounter == 0)
-                            if (lineCounter == 0)
-                            {
-           
-                                lineCounter++;
-                                continue;
-                            }
-                            string[] fields = line.Split(',');
-
-                            stockTicker = fields[0].Trim('"');
-                            stockPeriod = fields[1].Trim('"');
-                            string s = $"{fields[2]}{fields[3]}".Trim('"');
-                            DateTime date = DateTime.Parse(s);
-                            decimal open = decimal.Parse(fields[4]);
-                            decimal high = decimal.Parse(fields[5]);
-                            decimal low = decimal.Parse(fields[6]);
-                            decimal close = decimal.Parse(fields[7]);
-                            int volume = int.Parse(fields[8]);
-                            // Process the line (e.g., print it to the console
-
-                            StockData stockData = new StockData(date, open, high, low, close, volume);
-                            rawData.Add(stockData);
-
-                            lineCounter++;
-                        }
-
-                        rawData.Reverse();
-                        //filter the data from rawData using the date ranges.
-                        foreach (var stockData in rawData)
-                        {
-                            if (stockData.date >= startDate && stockData.date <= endDate)
-                            {
-                                stockDataList.Add(stockData);
-                            }
-
-                            if (stockData.date > endDate)
-                            {
-                                break;
-                            }
-                        }
-
-                        foreach (var stockData in stockDataList)
-                        {
-                            Console.WriteLine($"Ticker: {stockTicker}, Period: {stockPeriod}, Date: {stockData.Date}, Open: {stockData.Open}, Close: {stockData.Close}, High: {stockData.High}, Low: {stockData.Low}, Volume: {stockData.Volume}");
-                        }
-
-                        // stockData should be only the data in the date range
-
-                        dataGridView_stock.DataSource = stockDataList;
-                        updateStockDataArray();
-                        
-
-
-                    }
-                    catch (Exception ex)
-                    {
-                        // Handle and log the exception
-                        Console.WriteLine($"An error occurred: {ex.Message}");
-                    }
-
-
-                }
-            }
-        }
-
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void chart1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void openFileDialog_LoadTicker_FileOk(object sender, CancelEventArgs e)
-        {
-
-        }
-
-        private void chart1_Click_1(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void bindingSource1_CurrentChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        public void updateStockDataArray()
-        {
-
-            chart1.Series.Clear();
-
-            DateTime startDate = dateTimePicker_StartDate.Value;
-            DateTime endDate = dateTimePicker_EndDate.Value;
-
-            foreach (var stockData in rawData)
+            foreach (var stockData in stockDataList)
             {
                 if (stockData.date >= startDate && stockData.date <= endDate)
                 {
-                    stockDataList.Add(stockData);
+                    filteredStockData.Add(stockData);
                 }
 
                 if (stockData.date > endDate)
@@ -254,57 +114,89 @@ namespace in_class_project
                     break;
                 }
             }
+            return filteredStockData;
+        }
 
-            // Create series for Price and Volume chart areas
-            Series priceSeries = new Series("Price");
-            priceSeries.ChartType = SeriesChartType.Candlestick;
-            priceSeries.XValueType = ChartValueType.Date;
-
-            Series volumeSeries = new Series("Volume");
-            volumeSeries.ChartType = SeriesChartType.Column;
-            volumeSeries.XValueType = ChartValueType.Date;
-
-            // Add data points to the Candlestick and Column series
-            foreach (var stockData in stockDataList)
-            {
-                // Add data points to Candlestick series
-                DataPoint priceDataPoint = new DataPoint();
-                priceDataPoint.XValue = stockData.Date.ToOADate();
-                priceDataPoint.YValues = new double[] { (double)stockData.High, (double)stockData.Low, (double)stockData.Open, (double)stockData.Close };
-                //priceDataPoint.SetValueXY(stockData.Date, (double)stockData.High, (double)stockData.Low, (double)stockData.Close, (double)stockData.Open);
-                if (stockData.Close > stockData.Open)
-                {
-                    priceDataPoint.Color = Color.Red;
-                }
-                else
-                {
-                    priceDataPoint.Color = Color.Green;
-                }
-
-                priceSeries.Points.Add(priceDataPoint);
-
-                // Add data points to Volume series
-                DataPoint volumeDataPoint = new DataPoint();
-                volumeDataPoint.XValue = stockData.Date.ToOADate();
-                volumeDataPoint.SetValueY((double)stockData.Volume);
-                volumeSeries.Points.Add(volumeDataPoint);
-            }
-
-            // Add the Candlestick and Volume series to the chart
-            chart1.Series.Add(priceSeries);
-            chart1.Series.Add(volumeSeries);
-
-            // Set the chart area names for the series
-            priceSeries.ChartArea = "ChartAreaPrice";
-            volumeSeries.ChartArea = "ChartAreaVolume";
-
-            chart1.Invalidate();
-
-        }     
-
-        public void button_refresh_Click(object sender, EventArgs e)
+        public BindingList<CandleStick> loadCandleStickData(string selectedFilePath)
         {
-                updateStockDataArray();
+            BindingList<CandleStick> stockDataList = new BindingList<CandleStick>();
+            using (StreamReader reader = new StreamReader(selectedFilePath))
+            {
+                string line;
+                int lineCounter = 0;
+                string stockTicker = "";
+                string stockPeriod = "";
+                try
+                {
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        // Skip the first line (lineCounter == 0)
+                        if (lineCounter == 0)
+                        {
+                            lineCounter++;
+                            continue;
+                        }
+                        string[] fields = line.Split(',');
+
+                        stockTicker = fields[0].Trim('"');
+                        stockPeriod = fields[1].Trim('"');
+                        string s = $"{fields[2]}{fields[3]}".Trim('"');
+                        DateTime date = DateTime.Parse(s);
+                        decimal open = decimal.Parse(fields[4]);
+                        decimal high = decimal.Parse(fields[5]);
+                        decimal low = decimal.Parse(fields[6]);
+                        decimal close = decimal.Parse(fields[7]);
+                        int volume = int.Parse(fields[8]);
+                        // Process the line (e.g., print it to the console
+
+                        CandleStick stockData = new CandleStick(date, open, high, low, close, volume);
+                        stockDataList.Add(stockData);
+                        lineCounter++;
+                    }
+
+                    //FilterDataUsingStartDateAndEndDate(dateTimePicker_StartDate.Value, dateTimePicker_EndDate.Value, stockDataList);
+                    stockDataList.Reverse();
+
+                    // stockData should be only the data in the date 
+
+
+                }
+                catch (Exception ex)
+                {
+                    // Handle and log the exception
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                }
+
+            }
+            return stockDataList;
+        }
+
+        List<BindingList<CandleStick>> AllFilesList;
+        // this function load all the data of all the files an returns a list of list of CandleSticks
+        private void button_load_stock_data_Click(object sender, EventArgs e)
+        {
+            AllFilesList = new List<BindingList<CandleStick>>();
+            openFileDialog_LoadTicker.Title = "Open Ticker CSV file";
+            openFileDialog_LoadTicker.Filter = "All Files|*.csv|Daily Stock|*-Day.csv|Weekly Stock|*-Week.csv|Monthly Stock|*-Month.csv";
+
+                // file was selected
+                if (openFileDialog_LoadTicker.ShowDialog() == DialogResult.OK)
+                {
+
+                string[] selectedFiles = openFileDialog_LoadTicker.FileNames;
+                
+                foreach (var file in selectedFiles)
+                    {
+                        OpenNewFormWithData(loadCandleStickData(file), Path.GetFileName(file));
+                    }
+                }
+            }
+        // for each file I need to load a form with all the data
+        public void OpenNewFormWithData(BindingList<CandleStick> stockData,string Ticker)
+        {
+            Form_Ticker_Chart newForm = new Form_Ticker_Chart();
+            newForm.Show();
+            newForm.SetData(stockData,Ticker, dateTimePicker_StartDate.Value, dateTimePicker_StartDate.Value); // Pass the stock data to the new form
         }
     }
-}
+    }
