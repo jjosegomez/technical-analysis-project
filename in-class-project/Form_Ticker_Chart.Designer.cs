@@ -29,20 +29,23 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.ChartDateTimePicker_Start = new System.Windows.Forms.DateTimePicker();
             this.ChartDateTimePicker_End = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.FilteredStockDataList = new System.Windows.Forms.BindingSource(this.components);
             this.button_refresh = new System.Windows.Forms.Button();
-            this.TickerChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.Label_StockName = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.FilteredStockDataList)).BeginInit();
+            this.bindingSource_stockData = new System.Windows.Forms.BindingSource(this.components);
+            this.TickerChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboBox_Pattern = new System.Windows.Forms.ComboBox();
+            this.buttonFindPattern = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource_stockData)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TickerChart)).BeginInit();
             this.SuspendLayout();
             // 
@@ -91,50 +94,94 @@
             this.button_refresh.Text = "↻";
             this.button_refresh.UseVisualStyleBackColor = false;
             // 
-            // TickerChart
-            // 
-            chartArea1.Name = "ChartArea_CandleSticks";
-            chartArea2.Name = "ChartArea_Volume";
-            this.TickerChart.ChartAreas.Add(chartArea1);
-            this.TickerChart.ChartAreas.Add(chartArea2);
-            this.TickerChart.DataSource = this.FilteredStockDataList;
-            legend1.Name = "Legend1";
-            this.TickerChart.Legends.Add(legend1);
-            this.TickerChart.Location = new System.Drawing.Point(16, 124);
-            this.TickerChart.Name = "TickerChart";
-            series1.ChartArea = "ChartArea_CandleSticks";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Candlestick;
-            series1.CustomProperties = "PriceDownColor=Red, PriceUpColor=Lime, LabelValueType=High";
-            series1.Legend = "Legend1";
-            series1.Name = "Price";
-            series1.YValuesPerPoint = 4;
-            series2.ChartArea = "ChartArea_Volume";
-            series2.Legend = "Legend1";
-            series2.Name = "Volume";
-            this.TickerChart.Series.Add(series1);
-            this.TickerChart.Series.Add(series2);
-            this.TickerChart.Size = new System.Drawing.Size(588, 347);
-            this.TickerChart.TabIndex = 4;
-            this.TickerChart.Text = "chart1";
-            // 
             // Label_StockName
             // 
-            this.Label_StockName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.Label_StockName.AutoSize = true;
             this.Label_StockName.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label_StockName.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.Label_StockName.Location = new System.Drawing.Point(229, 31);
+            this.Label_StockName.Location = new System.Drawing.Point(220, 27);
             this.Label_StockName.Name = "Label_StockName";
             this.Label_StockName.Size = new System.Drawing.Size(164, 31);
             this.Label_StockName.TabIndex = 5;
             this.Label_StockName.Text = "StockName";
             this.Label_StockName.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // TickerChart
+            // 
+            this.TickerChart.CausesValidation = false;
+            chartArea5.Name = "ChartAreaPrice";
+            chartArea6.Name = "ChartAreaVolume";
+            this.TickerChart.ChartAreas.Add(chartArea5);
+            this.TickerChart.ChartAreas.Add(chartArea6);
+            legend3.Name = "Legend1";
+            this.TickerChart.Legends.Add(legend3);
+            this.TickerChart.Location = new System.Drawing.Point(16, 124);
+            this.TickerChart.Name = "TickerChart";
+            series5.ChartArea = "ChartAreaPrice";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Candlestick;
+            series5.CustomProperties = "PriceDownColor=Red, PriceUpColor=Lime";
+            series5.IsXValueIndexed = true;
+            series5.Legend = "Legend1";
+            series5.Name = "Price";
+            series5.YValuesPerPoint = 4;
+            series6.ChartArea = "ChartAreaVolume";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedColumn;
+            series6.Legend = "Legend1";
+            series6.Name = "Volume";
+            this.TickerChart.Series.Add(series5);
+            this.TickerChart.Series.Add(series6);
+            this.TickerChart.Size = new System.Drawing.Size(588, 347);
+            this.TickerChart.TabIndex = 4;
+            this.TickerChart.Text = "chart1";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(104, 487);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(190, 20);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Find candle stick patterns";
+            // 
+            // comboBox_Pattern
+            // 
+            this.comboBox_Pattern.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox_Pattern.FormattingEnabled = true;
+            this.comboBox_Pattern.Items.AddRange(new object[] {
+            "Bullish",
+            "Bearish",
+            "Neuta",
+            "Marubozu",
+            "Doji",
+            "DragonFlyDoji",
+            "GravestoneDoji",
+            "Hammer",
+            "InvertedHammer"});
+            this.comboBox_Pattern.Location = new System.Drawing.Point(300, 487);
+            this.comboBox_Pattern.Name = "comboBox_Pattern";
+            this.comboBox_Pattern.Size = new System.Drawing.Size(133, 21);
+            this.comboBox_Pattern.TabIndex = 8;
+            // 
+            // buttonFindPattern
+            // 
+            this.buttonFindPattern.Location = new System.Drawing.Point(443, 487);
+            this.buttonFindPattern.Name = "buttonFindPattern";
+            this.buttonFindPattern.Size = new System.Drawing.Size(65, 21);
+            this.buttonFindPattern.TabIndex = 9;
+            this.buttonFindPattern.Text = "Find";
+            this.buttonFindPattern.UseVisualStyleBackColor = true;
+            this.buttonFindPattern.Click += new System.EventHandler(this.buttonFindPattern_Click);
+            // 
             // Form_Ticker_Chart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(619, 499);
+            this.ClientSize = new System.Drawing.Size(619, 526);
+            this.Controls.Add(this.buttonFindPattern);
+            this.Controls.Add(this.comboBox_Pattern);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.Label_StockName);
             this.Controls.Add(this.TickerChart);
             this.Controls.Add(this.button_refresh);
@@ -143,7 +190,7 @@
             this.Controls.Add(this.ChartDateTimePicker_End);
             this.Controls.Add(this.ChartDateTimePicker_Start);
             this.Name = "Form_Ticker_Chart";
-            ((System.ComponentModel.ISupportInitialize)(this.FilteredStockDataList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource_stockData)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TickerChart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -151,14 +198,16 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.BindingSource FilteredStockDataList;
         private System.Windows.Forms.DateTimePicker ChartDateTimePicker_Start;
         private System.Windows.Forms.DateTimePicker ChartDateTimePicker_End;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button_refresh;
-        private System.Windows.Forms.DataVisualization.Charting.Chart TickerChart;
         private System.Windows.Forms.Label Label_StockName;
+        private System.Windows.Forms.BindingSource bindingSource_stockData;
+        private System.Windows.Forms.DataVisualization.Charting.Chart TickerChart;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox comboBox_Pattern;
+        private System.Windows.Forms.Button buttonFindPattern;
     }
 }

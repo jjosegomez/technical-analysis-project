@@ -10,70 +10,12 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static in_class_project.Form_Ticker_Chart;
 
 
 namespace in_class_project
 {
     public partial class Form_Ticker_Selector : Form
     {
-        public class CandleStick
-        {
-            public DateTime date;
-            public decimal open;
-            public decimal high;
-            public decimal low;
-            public decimal close;
-            public decimal volume;
-
-            public DateTime Date
-            {
-                get { return date; }
-                set { date = value; }
-            }
-
-            public decimal Open
-            {
-                get { return open; }
-                set { open = value; }
-            }
-
-            public decimal Close
-            {
-                get { return close; }
-                set { close = value; }
-            }
-
-            public decimal High
-            {
-                get { return high; }
-                set { high = value; }
-            }
-
-            public decimal Low
-            {
-                get { return low; }
-                set { low = value; }
-            }
-
-            public decimal Volume
-            {
-                get { return volume; }
-                set { volume = value; }
-            }
-
-            public CandleStick(DateTime date, decimal open, decimal high, decimal low, decimal close, int volume)
-            {
-                this.date = date;
-                this.open = open;
-                this.high = high;
-                this.low = low;
-                this.close = close;
-                this.volume = volume;
-            }
-
-        }
-
         public class DateConverter
         {
             public static string ConvertToCustomFormat(string inputDate)
@@ -95,31 +37,10 @@ namespace in_class_project
             InitializeComponent();
         }
 
-        //filters the binding list that will be link with the chart
-        public BindingList<CandleStick> FilterDataUsingStartDateAndEndDate(DateTime startDate, DateTime endDate, List<CandleStick> stockDataList)
+
+        public BindingList<SmartCandleStick> loadCandleStickData(string selectedFilePath)
         {
-            //filter the data from rawData using the date ranges.
-
-            BindingList<CandleStick> filteredStockData = new BindingList<CandleStick>();
-
-            foreach (var stockData in stockDataList)
-            {
-                if (stockData.date >= startDate && stockData.date <= endDate)
-                {
-                    filteredStockData.Add(stockData);
-                }
-
-                if (stockData.date > endDate)
-                {
-                    break;
-                }
-            }
-            return filteredStockData;
-        }
-
-        public BindingList<CandleStick> loadCandleStickData(string selectedFilePath)
-        {
-            BindingList<CandleStick> stockDataList = new BindingList<CandleStick>();
+            BindingList<SmartCandleStick> stockDataList = new BindingList<SmartCandleStick>();
             using (StreamReader reader = new StreamReader(selectedFilePath))
             {
                 string line;
@@ -149,13 +70,10 @@ namespace in_class_project
                         int volume = int.Parse(fields[8]);
                         // Process the line (e.g., print it to the console
 
-                        CandleStick stockData = new CandleStick(date, open, high, low, close, volume);
+                        SmartCandleStick stockData = new SmartCandleStick(date, open, high, low, close, volume);
                         stockDataList.Add(stockData);
                         lineCounter++;
                     }
-
-                    //FilterDataUsingStartDateAndEndDate(dateTimePicker_StartDate.Value, dateTimePicker_EndDate.Value, stockDataList);
-                    stockDataList.Reverse();
 
                     // stockData should be only the data in the date 
 
@@ -171,32 +89,34 @@ namespace in_class_project
             return stockDataList;
         }
 
-        List<BindingList<CandleStick>> AllFilesList;
+        List<BindingList<SmartCandleStick>> AllFilesList;
         // this function load all the data of all the files an returns a list of list of CandleSticks
         private void button_load_stock_data_Click(object sender, EventArgs e)
         {
-            AllFilesList = new List<BindingList<CandleStick>>();
+            AllFilesList = new List<BindingList<SmartCandleStick>>();
             openFileDialog_LoadTicker.Title = "Open Ticker CSV file";
             openFileDialog_LoadTicker.Filter = "All Files|*.csv|Daily Stock|*-Day.csv|Weekly Stock|*-Week.csv|Monthly Stock|*-Month.csv";
 
-                // file was selected
-                if (openFileDialog_LoadTicker.ShowDialog() == DialogResult.OK)
-                {
+            // file was selected
+            if (openFileDialog_LoadTicker.ShowDialog() == DialogResult.OK)
+            {
 
                 string[] selectedFiles = openFileDialog_LoadTicker.FileNames;
-                
+
                 foreach (var file in selectedFiles)
-                    {
-                        OpenNewFormWithData(loadCandleStickData(file), Path.GetFileName(file));
-                    }
+                {
+                    OpenNewFormWithData(loadCandleStickData(file), Path.GetFileName(file));
                 }
             }
+        }
         // for each file I need to load a form with all the data
-        public void OpenNewFormWithData(BindingList<CandleStick> stockData,string Ticker)
+        public void OpenNewFormWithData(BindingList<SmartCandleStick> stockData, string Ticker)
         {
             Form_Ticker_Chart newForm = new Form_Ticker_Chart();
             newForm.Show();
-            newForm.SetData(stockData,Ticker, dateTimePicker_StartDate.Value, dateTimePicker_StartDate.Value); // Pass the stock data to the new form
+            newForm.SetData(stockData, Ticker, dateTimePicker_StartDate.Value, dateTimePicker_EndDate.Value); // Pass the stock data to the new form
         }
+
+        //function to make annotations for candlesticks patterns
     }
-    }
+}
