@@ -34,8 +34,8 @@
             System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            this.ChartDateTimePicker_Start = new System.Windows.Forms.DateTimePicker();
-            this.ChartDateTimePicker_End = new System.Windows.Forms.DateTimePicker();
+            this.RefreshDateTimePicker_Start = new System.Windows.Forms.DateTimePicker();
+            this.RefreshDateTimePicker_End = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.button_refresh = new System.Windows.Forms.Button();
@@ -49,19 +49,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.TickerChart)).BeginInit();
             this.SuspendLayout();
             // 
-            // ChartDateTimePicker_Start
+            // RefreshDateTimePicker_Start
             // 
-            this.ChartDateTimePicker_Start.Location = new System.Drawing.Point(94, 84);
-            this.ChartDateTimePicker_Start.Name = "ChartDateTimePicker_Start";
-            this.ChartDateTimePicker_Start.Size = new System.Drawing.Size(200, 20);
-            this.ChartDateTimePicker_Start.TabIndex = 0;
+            this.RefreshDateTimePicker_Start.Location = new System.Drawing.Point(94, 84);
+            this.RefreshDateTimePicker_Start.Name = "RefreshDateTimePicker_Start";
+            this.RefreshDateTimePicker_Start.Size = new System.Drawing.Size(200, 20);
+            this.RefreshDateTimePicker_Start.TabIndex = 0;
             // 
-            // ChartDateTimePicker_End
+            // RefreshDateTimePicker_End
             // 
-            this.ChartDateTimePicker_End.Location = new System.Drawing.Point(337, 84);
-            this.ChartDateTimePicker_End.Name = "ChartDateTimePicker_End";
-            this.ChartDateTimePicker_End.Size = new System.Drawing.Size(200, 20);
-            this.ChartDateTimePicker_End.TabIndex = 1;
+            this.RefreshDateTimePicker_End.Location = new System.Drawing.Point(337, 84);
+            this.RefreshDateTimePicker_End.Name = "RefreshDateTimePicker_End";
+            this.RefreshDateTimePicker_End.Size = new System.Drawing.Size(200, 20);
+            this.RefreshDateTimePicker_End.TabIndex = 1;
             // 
             // label1
             // 
@@ -93,6 +93,7 @@
             this.button_refresh.TabIndex = 0;
             this.button_refresh.Text = "↻";
             this.button_refresh.UseVisualStyleBackColor = false;
+            this.button_refresh.Click += new System.EventHandler(this.button_refresh_Click);
             // 
             // Label_StockName
             // 
@@ -152,10 +153,10 @@
             this.comboBox_Pattern.Items.AddRange(new object[] {
             "Bullish",
             "Bearish",
-            "Neuta",
+            "Neutral",
             "Marubozu",
             "Doji",
-            "DragonFlyDoji",
+            "DragonflyDoji",
             "GravestoneDoji",
             "Hammer",
             "InvertedHammer"});
@@ -187,8 +188,8 @@
             this.Controls.Add(this.button_refresh);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.ChartDateTimePicker_End);
-            this.Controls.Add(this.ChartDateTimePicker_Start);
+            this.Controls.Add(this.RefreshDateTimePicker_End);
+            this.Controls.Add(this.RefreshDateTimePicker_Start);
             this.Name = "Form_Ticker_Chart";
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource_stockData)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TickerChart)).EndInit();
@@ -198,8 +199,8 @@
         }
 
         #endregion
-        private System.Windows.Forms.DateTimePicker ChartDateTimePicker_Start;
-        private System.Windows.Forms.DateTimePicker ChartDateTimePicker_End;
+        private System.Windows.Forms.DateTimePicker RefreshDateTimePicker_Start;
+        private System.Windows.Forms.DateTimePicker RefreshDateTimePicker_End;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button_refresh;

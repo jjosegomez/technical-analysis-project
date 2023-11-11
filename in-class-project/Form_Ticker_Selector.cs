@@ -75,8 +75,6 @@ namespace in_class_project
                         lineCounter++;
                     }
 
-                    // stockData should be only the data in the date 
-
 
                 }
                 catch (Exception ex)
