@@ -66,6 +66,9 @@ namespace in_class_project
             volumeSeries.ChartType = SeriesChartType.Column;
             volumeSeries.XValueType = ChartValueType.Date;
 
+            TickerChart.Series[0].Points.Clear();
+            TickerChart.Series[1].Points.Clear();
+
             // Add data points to the Candlestick and Column series
             foreach (SmartCandleStick cd in bindingSource_stockData)
             {
