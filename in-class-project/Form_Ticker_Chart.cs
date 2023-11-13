@@ -53,6 +53,19 @@ namespace in_class_project
             TickerChart.Series[0].XValueMember = "Date";
             TickerChart.Series[0].YValueMembers = "Open,High,Low,Close";
             TickerChart.Series[0].ChartType = SeriesChartType.Candlestick;
+            
+            if (bindingSource_stockData.Count > 0)
+            { 
+                double minY = (double)bindingSource_stockData.OfType<SmartCandleStick>().Min(cd => cd.low);
+                double maxY = (double)bindingSource_stockData.OfType<SmartCandleStick>().Max(cd => cd.high);
+                // Set Y-axis range
+                TickerChart.ChartAreas[0].AxisY.Minimum = minY;
+                TickerChart.ChartAreas[0].AxisY.Maximum = maxY;
+            }
+
+
+            // Format Y-axis labels to display two decimal places
+            TickerChart.ChartAreas[0].AxisY.LabelStyle.Format = "F2";
 
             // Update the chart
             TickerChart.DataBind();
@@ -101,21 +114,22 @@ namespace in_class_project
             if (methodInfo != null)
             {
                 TickerChart.Annotations.Clear();
-                Console.WriteLine(pattern);
-
+                
+                Console.WriteLine($"{pattern} Function Exists");
                 // Get the list of SmartCandleSticks from the binding source
                 List<SmartCandleStick> smartCandleSticks = bindingSource_stockData.OfType<SmartCandleStick>().ToList();
 
                 // Find data points that match the pattern
-                foreach (var cd in smartCandleSticks)
+                for(int i = 0; i < smartCandleSticks.Count; i++)
                 {
-                    bool isPattern = (bool)methodInfo.Invoke(cd, null);
+                    bool isPattern = (bool)methodInfo.Invoke(smartCandleSticks[i], null);
 
                     if (isPattern)
                     {
+                        Console.WriteLine($"{pattern} was called = {isPattern}");
                         // Add annotation for the matching data point
-                        Console.WriteLine($"Match found for {comboBox_Pattern.Text} at {cd.date}");
-                        AddAnnotation(cd);
+                        Console.WriteLine($"Match found for {comboBox_Pattern.Text} at {smartCandleSticks[i].date}");
+                        AddAnnotation(i);
                     }
                 }
 
@@ -129,14 +143,15 @@ namespace in_class_project
         }
 
 
-        private void AddAnnotation(SmartCandleStick cd)
+        private void AddAnnotation(int index)
         {
             TextAnnotation annotation = new TextAnnotation();
 
+            
+
             // Customize the annotation based on the data point
             annotation.Text = $"{comboBox_Pattern.Text}";
-            annotation.X = cd.date.ToOADate();
-            annotation.Y = (double)cd.high; // You can customize this based on your data
+            annotation.AnchorDataPoint = TickerChart.Series[0].Points[index];
             annotation.ForeColor = Color.Red;
             annotation.Font = new Font("Arial", 10);
 
@@ -200,6 +215,7 @@ namespace in_class_project
                 volumeDataPoint.SetValueY((double)cd.volume);
                 volumeSeries.Points.Add(volumeDataPoint);
             }
+
 
             // Redraw the chart
             TickerChart.Invalidate();

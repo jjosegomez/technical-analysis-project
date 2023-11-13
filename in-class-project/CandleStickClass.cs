@@ -36,43 +36,42 @@ namespace in_class_project
             : base(date, open, high, low, close, volume)
         {
             bodyRange = Math.Abs(open - close);
-            totalRange = high - low;
-            range = high - low;
+            totalRange = Math.Abs(high - low);
             topPrice = Math.Max(open, close);
             bottomPrice = Math.Min(open, close);
             topTail = high - Math.Max(open, close);
             bottomTail = Math.Min(open, close) - low;
         }
 
-        public bool IsMarubozu()
-        {
-            // Marubozu is a candlestick with no or very small shadows and a long body
-            return low == Math.Min(open, close) && high == Math.Max(open, close);
-        }
-
         public bool IsDoji()
         {
             // Doji is a candlestick with a small body, indicating indecision in the market
-            decimal epsilon = 0.0001m; // Adjust the epsilon value based on your precision requirements
-            return bodyRange <= 0.1m * totalRange + epsilon;
+            return bodyRange <= 0.1m * totalRange;
+        }
+
+
+        public bool IsMarubozu()
+        {
+            // Marubozu is a candlestick with no or very small shadows and a long body
+            return Math.Abs(open - close) >= 0.9m * totalRange;
         }
 
         public bool IsBullish()
         {
             // Define your criteria for a Bullish candlestick
-            return close > open;
+            return close > open - 1m;
         }
 
         public bool IsBearish()
         {
             // Define your criteria for a Bearish candlestick
-            return close < open;
+            return close < open + 1m;
         }
 
         public bool IsNeutral()
         {
             // Define your criteria for a Neutral candlestick
-            return close == open;
+            return bodyRange <= 0.1m * totalRange;
         }
 
         // Add methods for other candlestick patterns as needed...
@@ -81,7 +80,7 @@ namespace in_class_project
         public bool IsDragonflyDoji()
         {
             // Define your criteria for a Dragonfly Doji
-            return IsDoji() && bottomTail < 0.1m * totalRange;
+            return IsDoji() && bottomTail < 1m * totalRange;
         }
 
         // Example: Gravestone Doji
@@ -95,16 +94,14 @@ namespace in_class_project
         public bool IsHammer()
         {
             // Define your criteria for a Hammer
-            return (close > open) && (bottomTail >= 2 * bodyRange) && (topTail <= 0.1m * totalRange);
+            return  (bottomTail >= 2 * bodyRange) && (topTail <= 0.1m * totalRange);
         }
 
         // Example: Inverted Hammer
         public bool IsInvertedHammer()
         {
             // Define your criteria for an Inverted Hammer
-            return (close > open) && (topTail >= 2 * bodyRange) && (bottomTail <= 0.1m * totalRange);
+            return  (topTail >= 2 * bodyRange) && (bottomTail <= 0.1m * totalRange);
         }
-
     }
-
 }
