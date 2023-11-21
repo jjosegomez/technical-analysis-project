@@ -101,65 +101,6 @@ namespace in_class_project
                 volumeSeries.Points.Add(volumeDataPoint);
             }
         }
-        // takes input from a combo box and checks all the data points that correspond to that pattern.
-        // for example if pattern = Bullish then it looks for all the SmartCandleSticks where isBullish return true and make an annotation.
-        private void buttonFindPattern_Click(object sender, EventArgs e)
-        {
-            string pattern = $"Is{comboBox_Pattern.Text}"; // Ensure the pattern name starts with "Is"
-
-            // Get the method info for the pattern method
-            var methodInfo = typeof(SmartCandleStick).GetMethod(pattern);
-
-            // Check if the method exists
-            if (methodInfo != null)
-            {
-                TickerChart.Annotations.Clear();
-                
-                Console.WriteLine($"{pattern} Function Exists");
-                // Get the list of SmartCandleSticks from the binding source
-                List<SmartCandleStick> smartCandleSticks = bindingSource_stockData.OfType<SmartCandleStick>().ToList();
-
-                // Find data points that match the pattern
-                for(int i = 0; i < smartCandleSticks.Count; i++)
-                {
-                    bool isPattern = (bool)methodInfo.Invoke(smartCandleSticks[i], null);
-
-                    if (isPattern)
-                    {
-                        Console.WriteLine($"{pattern} was called = {isPattern}");
-                        // Add annotation for the matching data point
-                        Console.WriteLine($"Match found for {comboBox_Pattern.Text} at {smartCandleSticks[i].date}");
-                        AddAnnotation(i);
-                    }
-                }
-
-                // Redraw the chart
-                TickerChart.Invalidate();
-            }
-            else
-            {
-                Console.WriteLine("Pattern method not found.");
-            }
-        }
-
-
-        private void AddAnnotation(int index)
-        {
-            TextAnnotation annotation = new TextAnnotation();
-
-            
-
-            // Customize the annotation based on the data point
-            annotation.Text = $"{comboBox_Pattern.Text}";
-            annotation.AnchorDataPoint = TickerChart.Series[0].Points[index];
-            annotation.ForeColor = Color.Red;
-            annotation.Font = new Font("Arial", 10);
-
-            // Add the annotation to the chart's annotations collection
-            TickerChart.Annotations.Add(annotation);
-        }
-
-
 
         private void ChangeDateRangeAndRefresh(DateTime startDate, DateTime endDate)
         {
@@ -225,6 +166,62 @@ namespace in_class_project
         private void button_refresh_Click(object sender, EventArgs e)
         {
             ChangeDateRangeAndRefresh(RefreshDateTimePicker_Start.Value,RefreshDateTimePicker_End.Value);
+        }
+
+        // takes input from a combo box and checks all the data points that correspond to that pattern.
+        // for example if pattern = Bullish then it looks for all the SmartCandleSticks where isBullish return true and make an annotation.
+        private void buttonFindPattern_Click(object sender, EventArgs e)
+        {
+            string pattern = $"Is{comboBox_Pattern.Text}"; // Ensure the pattern name starts with "Is"
+
+            // Get the method info for the pattern method
+            var methodInfo = typeof(SmartCandleStick).GetMethod(pattern);
+
+            // Check if the method exists
+            if (methodInfo != null)
+            {
+                TickerChart.Annotations.Clear();
+
+                Console.WriteLine($"{pattern} Function Exists");
+                // Get the list of SmartCandleSticks from the binding source
+                List<SmartCandleStick> smartCandleSticks = bindingSource_stockData.OfType<SmartCandleStick>().ToList();
+
+                // Find data points that match the pattern
+                for (int i = 0; i < smartCandleSticks.Count; i++)
+                {
+                    bool isPattern = (bool)methodInfo.Invoke(smartCandleSticks[i], null);
+
+                    if (isPattern)
+                    {
+                        Console.WriteLine($"{pattern} was called = {isPattern}");
+                        // Add annotation for the matching data point
+                        Console.WriteLine($"Match found for {comboBox_Pattern.Text} at {smartCandleSticks[i].date}");
+                        AddAnnotation(i);
+                    }
+                }
+
+                // Redraw the chart
+                TickerChart.Invalidate();
+            }
+            else
+            {
+                Console.WriteLine("Pattern method not found.");
+            }
+        }
+
+
+        private void AddAnnotation(int index)
+        {
+            TextAnnotation annotation = new TextAnnotation();
+
+            // Customize the annotation based on the data point
+            annotation.Text = $"{comboBox_Pattern.Text}";
+            annotation.AnchorDataPoint = TickerChart.Series[0].Points[index];
+            annotation.ForeColor = Color.Red;
+            annotation.Font = new Font("Arial", 10);
+
+            // Add the annotation to the chart's annotations collection
+            TickerChart.Annotations.Add(annotation);
         }
     }
 

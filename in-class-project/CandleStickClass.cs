@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 
 namespace in_class_project
 {
@@ -102,6 +104,94 @@ namespace in_class_project
         {
             // Define your criteria for an Inverted Hammer
             return  (topTail >= 2 * bodyRange) && (bottomTail <= 0.1m * totalRange);
+        }
+    }
+
+    // a class that cannot be instanceated.
+    public abstract class Recognizer
+    {
+        public virtual List<int> Recognize(List<SmartCandleStick> SmartCandleStickList)
+        {
+            List<int> result = new List<int>();
+            for( int i = 0; i < SmartCandleStickList.Count; i++ )
+            {
+                if (RecognizePattern(SmartCandleStickList))
+                {
+                    result.Add(i);
+                }
+            }
+            return result;
+        }
+
+        // virtual function means that you want to allow another class to redefine this
+        public abstract bool RecognizePattern(List<SmartCandleStick> csList);
+    } 
+    
+    public  class DojiRecognizer : Recognizer
+    {
+        public override bool RecognizePattern(List<SmartCandleStick> csList)
+        {
+            return csList[0].IsDoji();
+        }
+    }
+    public  class MarubozuRecognizer : Recognizer
+    {
+        public override bool RecognizePattern(List<SmartCandleStick> csList)
+        {
+            return csList[0].IsMarubozu();
+        }
+    }
+
+    public class NeutralRecognizer : Recognizer
+    {
+        public override bool RecognizePattern(List<SmartCandleStick> csList)
+        {
+            return csList[0].IsNeutral();
+        }
+    }
+
+    public class BullishRecognizer : Recognizer
+    {
+        public override bool RecognizePattern(List<SmartCandleStick> csList)
+        {
+            return csList[0].IsBullish();
+        }
+    }
+
+    public class BearishRecognizer : Recognizer
+    {
+        public override bool RecognizePattern(List<SmartCandleStick> csList)
+        {
+            return csList[0].IsBearish();
+        }
+    }
+
+    public class DragonflyDojiRecognizer : Recognizer
+    {
+        public override bool RecognizePattern(List<SmartCandleStick> csList)
+        {
+            return csList[0].IsDragonflyDoji();
+        }
+    }
+    public class GravestoneDojiRecognizer : Recognizer
+    {
+        public override bool RecognizePattern(List<SmartCandleStick> csList)
+        {
+            return csList[0].IsGravestoneDoji();
+        }
+    }
+    public class HammerRecognizer : Recognizer
+    {
+        public override bool RecognizePattern(List<SmartCandleStick> csList)
+        {
+            return csList[0].IsHammer();
+        }
+    }
+    public class InvertedHammerRecognizer : Recognizer
+    {
+        public override bool RecognizePattern(List<SmartCandleStick> csList)
+        {
+            return csList[0].IsInvertedHammer();
         }
     }
 }
