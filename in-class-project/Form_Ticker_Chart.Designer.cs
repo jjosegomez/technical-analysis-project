@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.RefreshDateTimePicker_Start = new System.Windows.Forms.DateTimePicker();
             this.RefreshDateTimePicker_End = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
@@ -110,27 +110,27 @@
             // TickerChart
             // 
             this.TickerChart.CausesValidation = false;
-            chartArea5.Name = "ChartAreaPrice";
-            chartArea6.Name = "ChartAreaVolume";
-            this.TickerChart.ChartAreas.Add(chartArea5);
-            this.TickerChart.ChartAreas.Add(chartArea6);
-            legend3.Name = "Legend1";
-            this.TickerChart.Legends.Add(legend3);
+            chartArea1.Name = "ChartAreaPrice";
+            chartArea2.Name = "ChartAreaVolume";
+            this.TickerChart.ChartAreas.Add(chartArea1);
+            this.TickerChart.ChartAreas.Add(chartArea2);
+            legend1.Name = "Legend1";
+            this.TickerChart.Legends.Add(legend1);
             this.TickerChart.Location = new System.Drawing.Point(16, 124);
             this.TickerChart.Name = "TickerChart";
-            series5.ChartArea = "ChartAreaPrice";
-            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Candlestick;
-            series5.CustomProperties = "PriceDownColor=Red, PriceUpColor=Lime";
-            series5.IsXValueIndexed = true;
-            series5.Legend = "Legend1";
-            series5.Name = "Price";
-            series5.YValuesPerPoint = 4;
-            series6.ChartArea = "ChartAreaVolume";
-            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedColumn;
-            series6.Legend = "Legend1";
-            series6.Name = "Volume";
-            this.TickerChart.Series.Add(series5);
-            this.TickerChart.Series.Add(series6);
+            series1.ChartArea = "ChartAreaPrice";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Candlestick;
+            series1.CustomProperties = "PriceDownColor=Red, PriceUpColor=Lime";
+            series1.IsXValueIndexed = true;
+            series1.Legend = "Legend1";
+            series1.Name = "Price";
+            series1.YValuesPerPoint = 4;
+            series2.ChartArea = "ChartAreaVolume";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedColumn;
+            series2.Legend = "Legend1";
+            series2.Name = "Volume";
+            this.TickerChart.Series.Add(series1);
+            this.TickerChart.Series.Add(series2);
             this.TickerChart.Size = new System.Drawing.Size(588, 347);
             this.TickerChart.TabIndex = 4;
             this.TickerChart.Text = "chart1";
@@ -164,6 +164,7 @@
             this.comboBox_Pattern.Name = "comboBox_Pattern";
             this.comboBox_Pattern.Size = new System.Drawing.Size(133, 21);
             this.comboBox_Pattern.TabIndex = 8;
+            this.comboBox_Pattern.SelectedIndexChanged += new System.EventHandler(this.comboBox_Pattern_SelectedIndexChanged);
             // 
             // buttonFindPattern
             // 

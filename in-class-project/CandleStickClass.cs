@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
+using System.Xml.Linq;
 
 namespace in_class_project
 {
@@ -129,6 +130,11 @@ namespace in_class_project
     
     public  class DojiRecognizer : Recognizer
     {
+        public string Name = "Doji";
+        public DojiRecognizer()
+        {
+            Name = "Marabouzu";
+        }
         public override bool RecognizePattern(List<SmartCandleStick> csList)
         {
             return csList[0].IsDoji();
@@ -136,6 +142,12 @@ namespace in_class_project
     }
     public  class MarubozuRecognizer : Recognizer
     {
+        public string Name = "Marabozu";
+
+        public MarubozuRecognizer()
+        {
+            Name = "Marabouzu";
+        }
         public override bool RecognizePattern(List<SmartCandleStick> csList)
         {
             return csList[0].IsMarubozu();
@@ -144,6 +156,13 @@ namespace in_class_project
 
     public class NeutralRecognizer : Recognizer
     {
+        public string Name { get; private set; }
+
+        public NeutralRecognizer()
+        {
+            Name = "Neutral";
+        }
+
         public override bool RecognizePattern(List<SmartCandleStick> csList)
         {
             return csList[0].IsNeutral();
@@ -152,6 +171,13 @@ namespace in_class_project
 
     public class BullishRecognizer : Recognizer
     {
+        public string Name { get; private set; }
+
+        public BullishRecognizer()
+        {
+            Name = "Bullish";
+        }
+
         public override bool RecognizePattern(List<SmartCandleStick> csList)
         {
             return csList[0].IsBullish();
@@ -160,6 +186,13 @@ namespace in_class_project
 
     public class BearishRecognizer : Recognizer
     {
+        public string Name { get; private set; }
+
+        public BearishRecognizer()
+        {
+            Name = "Bearish";
+        }
+
         public override bool RecognizePattern(List<SmartCandleStick> csList)
         {
             return csList[0].IsBearish();
@@ -168,30 +201,62 @@ namespace in_class_project
 
     public class DragonflyDojiRecognizer : Recognizer
     {
+        public string Name { get; private set; }
+
+        public DragonflyDojiRecognizer()
+        {
+            Name = "DragonflyDoji";
+        }
+
         public override bool RecognizePattern(List<SmartCandleStick> csList)
         {
             return csList[0].IsDragonflyDoji();
         }
     }
+
     public class GravestoneDojiRecognizer : Recognizer
     {
+        public string Name { get; private set; }
+
+        public GravestoneDojiRecognizer()
+        {
+            Name = "GravestoneDoji";
+        }
+
         public override bool RecognizePattern(List<SmartCandleStick> csList)
         {
             return csList[0].IsGravestoneDoji();
         }
     }
+
     public class HammerRecognizer : Recognizer
     {
+        public string Name { get; private set; }
+
+        public HammerRecognizer()
+        {
+            Name = "Hammer";
+        }
+
         public override bool RecognizePattern(List<SmartCandleStick> csList)
         {
             return csList[0].IsHammer();
         }
     }
+
     public class InvertedHammerRecognizer : Recognizer
     {
+        public string Name { get; private set; }
+
+        public InvertedHammerRecognizer()
+        {
+            Name = "InvertedHammer";
+        }
+
         public override bool RecognizePattern(List<SmartCandleStick> csList)
         {
             return csList[0].IsInvertedHammer();
         }
     }
+
 }

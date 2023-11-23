@@ -163,50 +163,22 @@ namespace in_class_project
         }
 
 
+        // creating the recognizerList
+        List<Recognizer> recognizersList = new List<Recognizer>();
+        
+        int recognizerSelected = new int(); 
+
         private void button_refresh_Click(object sender, EventArgs e)
         {
             ChangeDateRangeAndRefresh(RefreshDateTimePicker_Start.Value,RefreshDateTimePicker_End.Value);
         }
 
-        // takes input from a combo box and checks all the data points that correspond to that pattern.
-        // for example if pattern = Bullish then it looks for all the SmartCandleSticks where isBullish return true and make an annotation.
+        // change function so it takes the index of the combobox selected. make a comboBox on change event to update the variable holding the recognizer
+        // return a list of integers (index) that correspond to the pattern found.
+        // make a list of recognizer so we can loop use the index of the recognizerList to call the recognizer both recognizer list and the combobox should have the same options in the same orde for it to work.
         private void buttonFindPattern_Click(object sender, EventArgs e)
         {
-            string pattern = $"Is{comboBox_Pattern.Text}"; // Ensure the pattern name starts with "Is"
-
-            // Get the method info for the pattern method
-            var methodInfo = typeof(SmartCandleStick).GetMethod(pattern);
-
-            // Check if the method exists
-            if (methodInfo != null)
-            {
-                TickerChart.Annotations.Clear();
-
-                Console.WriteLine($"{pattern} Function Exists");
-                // Get the list of SmartCandleSticks from the binding source
-                List<SmartCandleStick> smartCandleSticks = bindingSource_stockData.OfType<SmartCandleStick>().ToList();
-
-                // Find data points that match the pattern
-                for (int i = 0; i < smartCandleSticks.Count; i++)
-                {
-                    bool isPattern = (bool)methodInfo.Invoke(smartCandleSticks[i], null);
-
-                    if (isPattern)
-                    {
-                        Console.WriteLine($"{pattern} was called = {isPattern}");
-                        // Add annotation for the matching data point
-                        Console.WriteLine($"Match found for {comboBox_Pattern.Text} at {smartCandleSticks[i].date}");
-                        AddAnnotation(i);
-                    }
-                }
-
-                // Redraw the chart
-                TickerChart.Invalidate();
-            }
-            else
-            {
-                Console.WriteLine("Pattern method not found.");
-            }
+            
         }
 
 
@@ -222,6 +194,11 @@ namespace in_class_project
 
             // Add the annotation to the chart's annotations collection
             TickerChart.Annotations.Add(annotation);
+        }
+
+        private void comboBox_Pattern_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            recognizerSelected = comboBox_Pattern.SelectedIndex;
         }
     }
 
