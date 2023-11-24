@@ -159,7 +159,9 @@
             "DragonflyDoji",
             "GravestoneDoji",
             "Hammer",
-            "InvertedHammer"});
+            "InvertedHammer",
+            "Peak",
+            "Valley"});
             this.comboBox_Pattern.Location = new System.Drawing.Point(300, 487);
             this.comboBox_Pattern.Name = "comboBox_Pattern";
             this.comboBox_Pattern.Size = new System.Drawing.Size(133, 21);

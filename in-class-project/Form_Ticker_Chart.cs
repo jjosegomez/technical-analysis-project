@@ -163,11 +163,7 @@ namespace in_class_project
         }
 
 
-        // creating the recognizerList
-        List<Recognizer> recognizersList = new List<Recognizer>();
-        
-        int recognizerSelected = new int(); 
-
+        // creating the recognizerList and adding the recognizers created.
         private void button_refresh_Click(object sender, EventArgs e)
         {
             ChangeDateRangeAndRefresh(RefreshDateTimePicker_Start.Value,RefreshDateTimePicker_End.Value);
@@ -176,26 +172,102 @@ namespace in_class_project
         // change function so it takes the index of the combobox selected. make a comboBox on change event to update the variable holding the recognizer
         // return a list of integers (index) that correspond to the pattern found.
         // make a list of recognizer so we can loop use the index of the recognizerList to call the recognizer both recognizer list and the combobox should have the same options in the same orde for it to work.
+        List<Recognizer> recognizersList = new List<Recognizer>();
+        
+        //populate the array of recognizers this have to be in the same oreder than in the combo box so the index corresponds to the recgonzier
+        public void populateRecognizerList() { 
+            recognizersList.Clear(); // to save space clear every time the combobox is hit
+            //Bullish
+            recognizersList.Add(new BullishRecognizer());
+            //Bearish
+            recognizersList.Add(new BearishRecognizer());
+            //Neutral
+            recognizersList.Add(new NeutralRecognizer());
+            //Marubozu
+            recognizersList.Add(new MarubozuRecognizer());
+            //Doji
+            recognizersList.Add(new DojiRecognizer());
+            //DragonflyDoji
+            recognizersList.Add(new DragonflyDojiRecognizer());
+            //GravestoneDoji
+            recognizersList.Add(new GravestoneDojiRecognizer());
+            //Hammer
+            recognizersList.Add(new HammerRecognizer());
+            //InvertedHammer
+            recognizersList.Add(new InvertedHammerRecognizer());
+            //Peak
+            recognizersList.Add(new PeakRecognizer());
+            //Valley
+            recognizersList.Add(new ValleyRecognizer());
+        }
         private void buttonFindPattern_Click(object sender, EventArgs e)
         {
-            
-        }
 
+            TickerChart.Annotations.Clear();
+            List<int> indexes = new List<int>();
+            populateRecognizerList();
+            if (comboBox_Pattern.Text == "")
+            {
+                return;
+            }
+            bool isPattern = new bool();
+            List<SmartCandleStick> tempList = new List<SmartCandleStick>();
+            int i = new int();
+            for (i = 0; i < bindingSource_stockData.Count - 2; i++)
+            {
+                tempList.Clear();
+
+                // Accumulate the next three candlesticks in the tempList
+                tempList.Add((SmartCandleStick)bindingSource_stockData[i]);
+                tempList.Add((SmartCandleStick)bindingSource_stockData[i + 1]);
+                tempList.Add((SmartCandleStick)bindingSource_stockData[i + 2]);
+
+                // Recognize patterns for the sequence of candlesticks
+                isPattern = recognizersList[recognizerSelected].RecognizePattern(tempList);
+
+                if (isPattern) { AddAnnotation(i); }
+            }
+
+            if (comboBox_Pattern.Text == "Valley" || comboBox_Pattern.Text == "Peak") { return;  }
+            
+            //handling last 2 of the list
+            int secondTolastIdx = i;
+            int lastIdx = i + 1;
+            SmartCandleStick secondTolast = (SmartCandleStick)bindingSource_stockData[secondTolastIdx];
+            SmartCandleStick last = (SmartCandleStick)bindingSource_stockData[lastIdx];
+            tempList.Clear();
+            tempList.Add(secondTolast);
+            isPattern = recognizersList[recognizerSelected].RecognizePattern(tempList);
+            if (isPattern) { AddAnnotation(secondTolastIdx); }
+            tempList.Clear();
+            tempList.Add(last);
+            isPattern = recognizersList[recognizerSelected].RecognizePattern(tempList);
+            if (isPattern) { AddAnnotation(lastIdx); }
+
+        }
 
         private void AddAnnotation(int index)
         {
+            // fix annotations when peak or valley
+            if (comboBox_Pattern.Text == "Valley" || comboBox_Pattern.Text == "Peak")
+            {
+                index = index + 1;
+            }
+
             TextAnnotation annotation = new TextAnnotation();
 
             // Customize the annotation based on the data point
             annotation.Text = $"{comboBox_Pattern.Text}";
             annotation.AnchorDataPoint = TickerChart.Series[0].Points[index];
-            annotation.ForeColor = Color.Red;
+            annotation.ForeColor = Color.Aqua;
+            annotation.BackColor = Color.Black;
             annotation.Font = new Font("Arial", 10);
 
             // Add the annotation to the chart's annotations collection
             TickerChart.Annotations.Add(annotation);
         }
 
+        int recognizerSelected = new int();
         private void comboBox_Pattern_SelectedIndexChanged(object sender, EventArgs e)
         {
             recognizerSelected = comboBox_Pattern.SelectedIndex;

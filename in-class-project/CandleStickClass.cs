@@ -62,13 +62,13 @@ namespace in_class_project
         public bool IsBullish()
         {
             // Define your criteria for a Bullish candlestick
-            return close > open - 1m;
+            return close > open ;
         }
 
         public bool IsBearish()
         {
             // Define your criteria for a Bearish candlestick
-            return close < open + 1m;
+            return close < open ;
         }
 
         public bool IsNeutral()
@@ -256,6 +256,46 @@ namespace in_class_project
         public override bool RecognizePattern(List<SmartCandleStick> csList)
         {
             return csList[0].IsInvertedHammer();
+        }
+    }
+
+    public class PeakRecognizer : Recognizer
+    {
+        public string Name { get; private set; }
+
+        public PeakRecognizer()
+        {
+            Name = "Peak";
+        }
+
+        public override bool RecognizePattern(List<SmartCandleStick> csList)
+        {
+            if (csList[0].high < csList[1].high && csList[1].high > csList[2].high)
+            {
+                return true;
+            }
+            return false;
+        }
+
+    }
+    public class ValleyRecognizer : Recognizer
+    {
+        public string Name { get; private set; }
+
+        public ValleyRecognizer()
+        {
+            Name = "Valley";
+        }
+
+        public override bool RecognizePattern(List<SmartCandleStick> csList)
+        {
+            // Check if the high of the second candlestick is less than both the high of the first
+            // and the high of the third candlestick (representing a valley pattern).
+            if (csList[0].high > csList[1].high && csList[1].high < csList[2].high)
+            {
+                return true;
+            }
+            return false;
         }
     }
 
